@@ -1,1 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Listing Lab POC: guided listing prep with saved progress." />
+  <title>Listing Lab (POC)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">LL</div>
+        <div>
+          <h1>Listing Lab <span class="muted">(POC)</span></h1>
+          <p class="subtitle">Guided listing prep with live preview + saved progress.</p>
+        </div>
+      </div>
 
+      <div class="meta">
+        <div class="pill" id="deviceHint" aria-live="polite">Responsive  -  Mobile-first</div>
+        <div class="pill" id="saveHint" aria-live="polite">Not saved yet</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container grid">
+    <!-- LEFT: Form / Workflow -->
+    <section class="card" aria-labelledby="formTitle">
+      <div class="cardHeader">
+        <h2 id="formTitle">Create a listing</h2>
+        <p class="muted small">Complete the fields below. Your progress is saved locally in your browser.</p>
+      </div>
+
+      <form id="listingForm" novalidate>
+        <div class="field">
+          <label for="itemName">Item name <span class="req">*</span></label>
+          <input id="itemName" name="itemName" type="text" placeholder="e.g., Levi's 501 Jeans" autocomplete="off" />
+          <p class="help">Tip: include brand + item type.</p>
+        </div>
+
+        <div class="field">
+          <label for="brand">Brand</label>
+          <input id="brand" name="brand" type="text" placeholder="e.g., Madewell, Nike, Reformation" autocomplete="off" />
+          <p class="help">
+            Optional but helps generate a better price range.
+            <a class="link" href="https://example.com/brand-guide" target="_blank" rel="noopener noreferrer">
+              Brand guide
+            </a>
+          </p>
+        </div>
+
+        <div class="field">
+          <label for="category">Category <span class="req">*</span></label>
+          <select id="category" name="category">
+            <option value="">Select...</option>
+            <option value="Tops">Tops</option>
+            <option value="Bottoms">Bottoms</option>
+            <option value="Dresses">Dresses</option>
+            <option value="Outerwear">Outerwear</option>
+            <option value="Shoes">Shoes</option>
+            <option value="Bags">Bags</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="condition">Condition <span class="req">*</span></label>
+          <select id="condition" name="condition">
+            <option value="">Select...</option>
+            <option value="New with tags">New with tags</option>
+            <option value="Like new">Like new</option>
+            <option value="Good">Good</option>
+            <option value="Fair">Fair</option>
+          </select>
+          <p class="help" id="conditionHelp">
+            Choose the closest match for how a buyer would experience it.
+            <span class="tooltip tooltipLink" data-tooltip="New with tags: Unworn, original tags attached. Like new: Worn once or twice, no visible flaws. Good: Light wear, minor signs of use. Fair: Noticeable wear or small flaws noted.">Condition definitions</span>
+          </p>
+        </div>
+
+        <div class="field">
+          <label for="price">List price (USD) <span class="req">*</span></label>
+          <input id="price" name="price" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g., 35" />
+          <p class="help" id="priceHelp">Required. Use the suggested range below if you're unsure.</p>
+          <p class="error" id="priceError" role="alert" hidden>Price must be 0 or greater.</p>
+        </div>
+
+        <div class="field guideBox" aria-live="polite">
+          <div class="guideHeader">
+            <div>
+              <p class="guideTitle">Price guidance (POC)</p>
+              <p class="help" id="guideHint">Select a category and condition to see a range.</p>
+            </div>
+            <button type="button" class="btn ghost" id="useSuggestedBtn">Use suggested price</button>
+          </div>
+          <div class="guideRange" id="suggestedRange">$-- to $--</div>
+          <p class="help small">Estimate only. Future versions will connect to resale pricing APIs.</p>
+        </div>
+
+        <div class="field">
+          <label for="notes">Notes (optional)</label>
+          <textarea id="notes" name="notes" rows="3" placeholder="e.g., Minor wash wear, no stains, hem intact."></textarea>
+          <p class="help">
+            <span class="tooltip tooltipLink" data-tooltip="Include anything a buyer should know: flaws, alterations, fit notes, fabric, or care details. Example: Small mark near hem, otherwise clean. Runs small. 100% cotton.">
+              Notes guide
+            </span>
+          </p>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn" id="saveBtn">Save</button>
+          <button type="button" class="btn secondary" id="clearBtn">Clear</button>
+        </div>
+
+        <div class="progressWrap" aria-live="polite">
+          <div class="progressText">
+            <span id="progressLabel">Completeness: 0/3</span>
+            <span class="muted small" id="statusMsg">Start by adding an item name.</span>
+          </div>
+          <progress id="progressBar" max="4" value="0">0</progress>
+        </div>
+      </form>
+    </section>
+
+    <!-- RIGHT: Live Preview / Export -->
+    <section class="card" aria-labelledby="previewTitle">
+      <div class="cardHeader split">
+        <div>
+          <h2 id="previewTitle">Live preview</h2>
+          <p class="muted small">This is the export-ready summary you can paste into a resale platform.</p>
+        </div>
+        <button class="btn ghost" id="copyBtn" type="button" title="Copy summary to clipboard">Copy</button>
+      </div>
+
+      <div class="previewBox">
+        <pre id="preview" aria-live="polite"></pre>
+      </div>
+
+      <details class="details">
+        <summary>POC notes (what this proves)</summary>
+        <ul>
+          <li>Guided input workflow with dynamic feedback.</li>
+          <li>Local persistence (refresh/reopen keeps progress).</li>
+          <li>Responsive layout for mobile, tablet, and desktop.</li>
+        </ul>
+      </details>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <p class="muted small">Listing Lab POC  -  Built with HTML/CSS/JS  -  Deployed on GitHub Pages</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
