@@ -6,6 +6,7 @@
  */
 
 const STORAGE_KEY = "listingLabPOC:v1";
+let hasTriedSave = false;
 
 const els = {
   deviceHint: document.getElementById("deviceHint"),
@@ -63,7 +64,7 @@ function setUIFromData(data) {
 }
 
 function isPriceValid(price) {
-  if (price === "") return true; // allow empty until user completes
+  if (price === "") return false;
   return Number.isFinite(price) && price >= 0;
 }
 
@@ -156,10 +157,15 @@ function render() {
   const data = getDataFromUI();
 
   // Validation: price
+  const priceMissing = data.price === "";
   const priceOk = isPriceValid(data.price);
-  els.priceError.hidden = priceOk;
-  if (!priceOk) {
-    els.statusMsg.textContent = "Fix price to continue (must be 0 or greater).";
+  const showPriceError = hasTriedSave && (priceMissing || !priceOk);
+  els.priceError.hidden = !showPriceError;
+  if (showPriceError) {
+    els.priceError.textContent = priceMissing
+      ? "Price is required."
+      : "Price must be 0 or greater.";
+    els.statusMsg.textContent = "Fix price to continue.";
   }
 
   // Progress
@@ -168,7 +174,7 @@ function render() {
   els.progressLabel.textContent = `Completeness: ${complete}/4`;
 
   // Status messaging
-  if (priceOk) {
+  if (!showPriceError) {
     if (complete === 0) els.statusMsg.textContent = "Start by adding an item name.";
     if (complete === 1) els.statusMsg.textContent = "Add category and condition to see pricing help.";
     if (complete === 2) els.statusMsg.textContent = "Great - add a list price to finish.";
@@ -197,10 +203,12 @@ function render() {
 
 function saveToStorage() {
   const data = getDataFromUI();
+  hasTriedSave = true;
 
   // Don't save invalid price states (keeps stored data clean)
-  if (!isPriceValid(data.price)) {
-    els.saveHint.textContent = "Not saved (invalid price)";
+  if (data.price === "" || !isPriceValid(data.price)) {
+    els.saveHint.textContent = "Not saved (fix price)";
+    render();
     return;
   }
 

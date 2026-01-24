@@ -45,7 +45,7 @@
           <input id="brand" name="brand" type="text" placeholder="e.g., Madewell, Nike, Reformation" autocomplete="off" />
           <p class="help">
             Optional but helps generate a better price range.
-            <a class="link" href="https://example.com/brand-guide" target="_blank" rel="noopener noreferrer">
+            <a class="link tooltip tooltipLink" data-tooltip="Links to external site." href="https://example.com/brand-guide" target="_blank" rel="noopener noreferrer">
               Brand guide
             </a>
           </p>
@@ -76,14 +76,22 @@
           </select>
           <p class="help" id="conditionHelp">
             Choose the closest match for how a buyer would experience it.
-            <span class="tooltip tooltipLink" data-tooltip="New with tags: Unworn, original tags attached. Like new: Worn once or twice, no visible flaws. Good: Light wear, minor signs of use. Fair: Noticeable wear or small flaws noted.">Condition definitions</span>
+            <span class="tooltip tooltipLink">
+              Condition definitions
+              <span class="tooltipText">
+                <strong>New with tags:</strong> Unworn, original tags attached.<br />
+                <strong>Like new:</strong> Worn once or twice, no visible flaws.<br />
+                <strong>Good:</strong> Light wear, minor signs of use.<br />
+                <strong>Fair:</strong> Noticeable wear or small flaws noted.
+              </span>
+            </span>
           </p>
         </div>
 
         <div class="field">
           <label for="price">List price (USD) <span class="req">*</span></label>
           <input id="price" name="price" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g., 35" />
-          <p class="help" id="priceHelp">Required. Use the suggested range below if you're unsure.</p>
+          <p class="help" id="priceHelp">Use the suggested range below if you're unsure.</p>
           <p class="error" id="priceError" role="alert" hidden>Price must be 0 or greater.</p>
         </div>
 
@@ -103,8 +111,12 @@
           <label for="notes">Notes (optional)</label>
           <textarea id="notes" name="notes" rows="3" placeholder="e.g., Minor wash wear, no stains, hem intact."></textarea>
           <p class="help">
-            <span class="tooltip tooltipLink" data-tooltip="Include anything a buyer should know: flaws, alterations, fit notes, fabric, or care details. Example: Small mark near hem, otherwise clean. Runs small. 100% cotton.">
+            <span class="tooltip tooltipLink">
               Notes guide
+              <span class="tooltipText">
+                Include anything a buyer should know: flaws, alterations, fit notes, fabric, or care details.<br />
+                Example: Small mark near hem, otherwise clean. Runs small. 100% cotton.
+              </span>
             </span>
           </p>
         </div>
